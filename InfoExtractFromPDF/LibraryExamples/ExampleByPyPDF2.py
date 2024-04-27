@@ -13,7 +13,7 @@ def extract_text_from_pdf(pdf_file: str) -> [str]:
         return pdf_text
 
 if __name__ == '__main__':
-    extracted = extract_text_from_pdf('sample.pdf')
+    extracted = extract_text_from_pdf('../pdfs/sample.pdf')
 
     for text in extracted:
         print(text)
