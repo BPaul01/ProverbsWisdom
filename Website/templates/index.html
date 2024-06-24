@@ -5,30 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playwrite+AU+VIC:wght@100..400&family=Poetsen+One&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+AU+QLD:wght@100..400&family=Poetsen+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/style.css">
     <title>ProverbsWisdom</title>
 </head>
 <body>
     <div class="top-buttons">
         <button class="top-button login-btn">Log In</button>
-        <button class="top-button signup-btn-grad">Sign Up</button>
-        <button class="top-button">=</button>
+        <button class="top-button signup-btn">Sign Up</button>
+        <a href="#menu">
+            <img src="static/menu-svgrepo-com.svg" alt="menu" class="top-button menu-btn">
+        </a>
+        <!-- <button class="top-button menu-btn">=</button> -->
     </div>
 
     <div class="main-content">
         <h1>Tune Into Timeless Wisdom</h1>
 
-        <div class="main-input-area">
+        <div class="main-input-area" id="reference-preview-insertion-point">
             <textarea class="main-input" rows="1" autocomplete="on" placeholder="Enter your question here..."></textarea>
 
-            <div class="reference-input">
-                <label for="reference" class="reference-element">Include a reference:</label>
-                <input type="checkbox" class="reference-element" id="reference">
+            <div class="reference-input" id="reference-controls-insertion-point">
+                <span class="reference-label">Include a reference:</span> 
+                <label for="reference" class="switch reference-element">
+                    <input type="checkbox" class="reference-checkbox" id="reference">
+                    <span class="slider"></span>
+                </label>
 
-                <div class="reference-text reference-element">Proverbs</div>
+                <!-- <div class="reference-text reference-element">Proverbs</div>
 
-                <select class="reference-chapter reference-element">
+                <select class="reference-select-input reference-element">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -62,21 +68,23 @@
                     <option value="31">31</option>
                 </select>
 
-                <div class="reference-element">:</div>
+                <div class="reference-element two-points">:</div>
 
-                <select class="first-reference-verse reference-element">
-                    <option value="_">_</option>
+                <select class="reference-select-input reference-element">
+                    <option value="0">0</option>
                 </select>
 
-                <div class="reference-element">-</div>
+                <div class="reference-element dash-line">-</div>
 
-                <select class="last-reference-verse reference-element">
-                    <option value="_">_</option>
-                </select>
+                <select class="reference-select-input reference-element">
+                    <option value="0">0</option>
+                </select> -->
             </div>
 
             <!-- <div class="reference-preview"></div> -->
         </div>
     </div>
+
+    <script src="static/ReferenceController.js"></script>
 </body>
 </html>
