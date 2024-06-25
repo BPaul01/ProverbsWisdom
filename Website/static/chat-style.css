@@ -1,0 +1,81 @@
+.new-convo-btn{
+    background-color: #074475;
+    color: #BBF9E5;
+    border: none;
+
+    transition: 0.5s;
+}
+
+.new-convo-btn:hover{
+    background-color: #053155;
+    border-color: #053155;
+}
+
+.chat-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    font-size: larger;
+    margin-bottom: 15vh;
+}
+
+.container{
+    width: 100vw;
+    margin: 15px 0 15px 0;
+}
+
+.user-container{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.bot-container{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.chat{
+    background-color: #6498BD;
+    width: 40vw;
+    border: 20px solid #6498BD;
+    margin: 0px 20px 0px 20px;
+    border-radius: 1em;
+    color: #FBF5F3;
+    font-size: 1em;
+    font-family: cursive;
+}
+
+.input-bar-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.main-input-box{
+    position: fixed;
+    bottom: 0;
+
+    background-color: #6498BD;
+    width: 60vw;
+    height: 5vh;
+
+    border: 4px solid #074475;
+    border-radius: 25px;
+    margin-bottom: 15px;
+    padding: 20px;
+
+    color: #FBF5F3;
+    font-size: larger;
+    font-family: cursive;
+
+    overflow: hidden;
+    resize: none;
+}
+
+.main-input-box::placeholder {
+    color: #fbf5f3bb;
+    align-items: center;
+    font-family: cursive;
+}
