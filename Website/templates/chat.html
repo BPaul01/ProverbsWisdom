@@ -11,13 +11,20 @@
     <title>ProverbsWisdom</title>
 </head>
 <body>
-    <div class="top-buttons">
+    <div class="top-buttons", id="btn-container">
         <button class="top-button new-convo-btn" id="new-convo-btn">New Conversation</button>
-        <button class="top-button login-btn" id="login-btn">Log In</button>
+        <!-- <button class="top-button login-btn" id="login-btn">Log In</button>
         <button class="top-button signup-btn" id="signup-btn">Sign Up</button>
-        <a href="#menu">
-            <img src="static/menu-svgrepo-com.svg" alt="menu" class="top-button menu-btn">
-        </a>
+        <a id="menu-btn">
+            <img src="static/menu-svgrepo-com.svg" alt="menu" class="top-button open-menu-btn">
+        </a> -->
+    </div>
+
+    <div id="side-menu" class="side-menu">
+        <a class="close-btn" id="close-btn">&times;</a>
+        <a class="a-menu-btn">Profile</a>
+        <a class="a-menu-btn">Older Conversations</a>
+        <a class="a-menu-btn" id="logout-btn">Logout</a>
     </div>
 
     <div class="chat-container", id="chat-container">

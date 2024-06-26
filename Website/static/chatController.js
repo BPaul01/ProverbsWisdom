@@ -1,16 +1,86 @@
 window.onload = LoadPageFunction;
 
+const tabletMediaQuery = window.matchMedia("(min-width: 481px) and (max-width: 768px)");
+const mobileMediaQuery = window.matchMedia("(max-width: 480px)");
+
+if (tabletMediaQuery.matches) {
+    // If media query matches
+    console.log("Media query matches: Tablet query");
+}
+else if (mobileMediaQuery.matches) {
+    // If media query matches
+    console.log("Media query matches: Mobile query");
+}
+else{
+    console.log("Media query matches : Desktop query");
+}
+
+function initializeSideMenu(){
+    menuBtn = document.createElement('a');
+    menuBtn.setAttribute('id', 'menu-btn');
+    menuBtn.innerHTML = '<img src="static/menu-svgrepo-com.svg" alt="menu" class="top-button open-menu-btn">';
+    document.getElementById('btn-container').appendChild(menuBtn);
+    
+    const sideMenu = document.getElementById('side-menu');
+    const closeBtn = document.getElementById('close-btn');
+
+    menuBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if(tabletMediaQuery.matches){
+            // If media query matches
+            sideMenu.style.width = '40vw';
+        }
+        else if(mobileMediaQuery.matches){
+            // If media query matches
+            sideMenu.style.width = '45vw';
+        }
+        else{
+            sideMenu.style.width = '25vw';
+        }
+    });
+
+    closeBtn.addEventListener('click', function() {
+        sideMenu.style.width = '0';
+    });
+}
+
 function LoadPageFunction(){
-    token = localStorage.getItem('token');
-    if(token){
-        document.getElementById('login-btn').remove();
-        document.getElementById('signup-btn').remove();
-    }
+    
+    // if(!token){
+    //     let loginButton = document.createElement("button");
+    //     loginButton.setAttribute("id", "login-btn");
+    //     loginButton.classList.add("login-btn");
+    //     loginButton.classList.add("top-button");
+    //     loginButton.innerHTML = "Log In";
+    //     loginButton.addEventListener('click', function() {
+    //         window.location.href = "/login";
+    //     });
+
+    //     let signupButton = document.createElement("button");
+    //     signupButton.setAttribute("id", "signup-btn");
+    //     signupButton.classList.add("signup-btn");
+    //     signupButton.classList.add("top-button");
+    //     signupButton.innerHTML = "Sign Up";
+    //     signupButton.addEventListener('click', function() {
+    //         window.location.href = "/signup";
+    //     });
+
+    //     menu = document.getElementById("menu-btn");
+    //     container = document.getElementById("btn-container");
+
+    //     container.insertBefore(loginButton, menu);
+    //     container.insertBefore(signupButton, menu);
+    // }
 
     question = sessionStorage.getItem('question');
 
     createUserChat(question);
     askFirstQuestion(question);
+
+    token = localStorage.getItem('token');
+    if(token){
+        initializeSideMenu();
+    }
 }
 
 function askFirstQuestion(question) {

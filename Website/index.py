@@ -34,12 +34,13 @@ def request_login():
 
 @app.route('/request-signup', methods=['POST'])
 def request_signup():
-    # data = request.get_json()
+    data = request.get_json()
     
-    # username = data.get('username')
+    username = data.get('username')
     # password = data.get('password')
     
-    return jsonify({'message': 'Signup successful'})
+    access_token = create_access_token(identity=username)
+    return jsonify({'access_token':access_token})
 
 @app.route('/start-chatting')
 def start_chatting():

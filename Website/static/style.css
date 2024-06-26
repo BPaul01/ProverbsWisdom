@@ -53,23 +53,76 @@ body {
     color: #BBF9E5;
 }
 
-.menu-btn {
+.open-menu-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #074475;
-    
+    width: 30px;
+    height: 45px;
+
     transition: 0.5s;
 }
 
-.menu-btn:hover {
+.open-menu-btn:hover {
     background-color: #053155;
     border-color: #053155;
 }
 
-.menu-btn {
-    width: 30px;
-    height: 45px;
+/* Side menu styles */
+.side-menu {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: rgba(5, 49, 85, 0.5);
+    backdrop-filter: blur(5px);
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.a-menu-btn {
+    padding: 8px 8px 8px 32px;
+    margin: 15px 0 15px 0;
+
+    text-decoration: none;
+    font-size: larger;
+    color: #FBF5F3;
+    display: block;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.a-menu-btn:hover, #close-btn:hover {
+    color: #f1f1f1;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#close-btn {
+    font-size: larger;
+    color: #FBF5F3;
+    padding: 10px 10px 10px 10px;
+    border-radius: 15px;
+
+    transition: 0.5s;
+    cursor: pointer;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-left: 50px;
+    margin-top: 10px;
+}
+
+.side-menu{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: larger;
+    margin-left: 50px;
 }
 
 .main-content {
@@ -96,18 +149,22 @@ h1 {
 }
 
 .main-input{
-    display: flex;
+    resize: none;
+    overflow: hidden;
+    min-height: 1lh;
+    min-width: 1em;
+
     background-color: #6498BD;
     width: 60vw;
-    height: 5vh;
+    height: 1lh;
+
     border: 20px solid #6498BD;
     border-radius: 1em;
-    margin-bottom: 15px;
+    margin-bottom: 30px;
+
     color: #FBF5F3;
     font-size: larger;
     font-family: cursive;
-    overflow: hidden;
-    resize: none;
 }
 
 .main-input::placeholder {
@@ -121,7 +178,6 @@ h1 {
     justify-content: center;
     align-items: center;
     font-family: cursive;
-    margin-top: 15px;
     width: 60vw;
 }
 
@@ -210,7 +266,75 @@ body > div.main-content > div > div > div.reference-text.reference-element{
     padding: 25px;
 
     width: 50vw;
-    max-height: 30vh;
+    min-height: 30vh;
 
     overflow-y: auto;
+}
+
+@media screen and (min-width: 481px) and (max-width: 768px) {
+    #close-btn {
+        padding: 20px 20px 20px 20px;
+    }
+
+    h1 {
+        font-size: 2em;
+        margin-top: 10vh;
+    }
+
+    .reference-input {
+        flex-direction: column;
+    }
+
+    .reference-element{
+        margin: 5px 0 5px 0;
+    }
+    
+    .reference-label{
+        margin-bottom: 5px;
+    }
+
+    body > div.main-content > div > div > div.reference-text.reference-element{
+        margin-left: 0px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .top-buttons {
+        display: flex;
+        justify-content: center;
+    }
+
+    #close-btn {
+        padding: 20px 20px 20px 20px;
+    }
+
+    .a-menu-btn {
+        font-size: medium;
+    }
+
+    h1 {
+        font-size: 2em;
+        margin-top: 5vh;
+    }
+
+    .main-input{
+        width: 70vw;
+        font-size: medium;
+    }
+
+    .reference-input {
+        flex-direction: column;
+    }
+
+    .reference-element{
+        margin: 5px 0 5px 0;
+    }
+    
+    .reference-label{
+        margin-bottom: 5px;
+    }
+
+    body > div.main-content > div > div > div.reference-text.reference-element{
+        margin-left: 0px;
+    }
 }
