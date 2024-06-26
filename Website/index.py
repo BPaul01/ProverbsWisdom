@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, render_template, session, jsonify
 import json
+import back_logic
 
 app = Flask(__name__)
 
@@ -44,8 +45,42 @@ def ask_question():
     }
     return jsonify(result), 200
 
-@app.route('/ask-followup-question', methods=['POST'])
-
+@app.route('/ask-follow-up-question', methods=['POST'])
+def ask_followup_question():
+    data = request.get_json()
+    
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    
+    chat_array = data.get('chats')
+    include_reference = data.get('includeReference')
+    chapter = data.get('chapter')
+    first_verse = data.get('firstVerse')
+    last_verse = data.get('lastVerse')
+    
+    if None in [chat_array, include_reference]:
+        return jsonify({'error': 'No question provided'}), 400
+    
+    if include_reference == 'true':
+        if None in [chapter, first_verse, last_verse]:
+            return jsonify({'error': 'No reference provided'}), 400
+    
+    print("Received chats:", chat_array)
+    print("Include reference:", include_reference)
+    print("Chapter:", chapter)
+    print("First verse:", first_verse)
+    print("Last verse:", last_verse)
+    
+    # Process the chats 
+    messages = back_logic.process_chats(chat_array)
+    print("Processed messages:", messages)
+    
+    # Make a request to the OpenAI API
+    
+    result = {
+        'answer': 'This is the answer the the question'
+    }
+    return jsonify(result), 200
 
 @app.route('/get/data/bible/kjv')
 def get_bible_data():
