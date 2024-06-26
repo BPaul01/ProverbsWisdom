@@ -1,12 +1,45 @@
 from flask import Flask, request, redirect, render_template, session, jsonify
+from flask_jwt_extended import JWTManager, create_access_token
 import json
 import back_logic
 
 app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = '799dd6ee-d842-4821-bc23-6c122f73c215'
+jwt = JWTManager(app)
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
+
+@app.route('/request-login', methods=['POST'])
+def request_login():
+    data = request.get_json()
+    
+    username = data.get('username')
+    password = data.get('password')
+    
+    if username == 'admin' and password == 'admin':
+        access_token = create_access_token(identity=username)
+        return jsonify({'access_token':access_token})
+    else:
+        return jsonify({'error': 'Invalid credentials'})
+
+@app.route('/request-signup', methods=['POST'])
+def request_signup():
+    # data = request.get_json()
+    
+    # username = data.get('username')
+    # password = data.get('password')
+    
+    return jsonify({'message': 'Signup successful'})
 
 @app.route('/start-chatting')
 def start_chatting():

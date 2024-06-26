@@ -1,6 +1,12 @@
 window.onload = LoadPageFunction;
 
 function LoadPageFunction(){
+    token = localStorage.getItem('token');
+    if(token){
+        document.getElementById('login-btn').remove();
+        document.getElementById('signup-btn').remove();
+    }
+
     question = sessionStorage.getItem('question');
 
     createUserChat(question);
@@ -45,57 +51,62 @@ function askFirstQuestion(question) {
 document.getElementById("input-textarea").addEventListener('keydown', function(event) {
     if(event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
-        console.log("Here, ask follow up...");
         askFollowUp(this.value);
     }
 });
 
-document.getElementById('new-convo-btn').addEventListener('click', function() {
-    window.location.href = "/";
-});
-
 function askFollowUp(text) {
-    //Put the text in the user-text div 
-    createUserChat(text);
+    if (text !== ""){
+        //Put the text in the user-text div 
+        createUserChat(text);
 
-    //Clear the input
-    document.getElementById("input-textarea").value = "";
+        //Clear the input
+        document.getElementById("input-textarea").value = "";
 
-    // Get all the past chats 
-    let chatArray = buildChatArray();
+        // Get all the past chats 
+        let chatArray = buildChatArray();
 
-    let bodyData;
-    if(sessionStorage.getItem('reference') === 'true') {
-        chapter = sessionStorage.getItem('chapter');
-        firstVerse = sessionStorage.getItem('first-verse');
-        lastVerse = sessionStorage.getItem('last-verse');
-        bodyData = {
-            chats: chatArray,
-            includeReference: 'true',
-            chapter: chapter,
-            firstVerse: firstVerse,
-            lastVerse: lastVerse
+        let bodyData;
+        if(sessionStorage.getItem('reference') === 'true') {
+            chapter = sessionStorage.getItem('chapter');
+            firstVerse = sessionStorage.getItem('first-verse');
+            lastVerse = sessionStorage.getItem('last-verse');
+            bodyData = {
+                chats: chatArray,
+                includeReference: 'true',
+                chapter: chapter,
+                firstVerse: firstVerse,
+                lastVerse: lastVerse
+            }
         }
-    }
-    else {
-        bodyData = {
-            chats: chatArray,
-            includeReference: 'false'
+        else {
+            bodyData = {
+                chats: chatArray,
+                includeReference: 'false'
+            }
         }
-    }
 
-    //Send the text to the server
-    fetch('/ask-follow-up-question', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(bodyData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        //Display the response
-        createBotChat(data.answer)
+        //Send the text to the server
+        fetch('/ask-follow-up-question', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bodyData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            //Display the response
+            createBotChat(data.answer)
+            scrollToBottom();
+        });
+    }
+}
+
+function scrollToBottom() {
+    window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth'
     });
 }
 
