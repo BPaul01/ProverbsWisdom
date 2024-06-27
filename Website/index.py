@@ -21,6 +21,10 @@ def login():
 def signup():
     return render_template('signup.html')
 
+@app.route('/old_conversation')
+def old_conversation():
+    return render_template('oldConversation.html')
+
 @app.route('/request-login', methods=['POST'])
 def request_login():
     data = request.get_json()
@@ -148,6 +152,21 @@ def get_older_conversations():
     older_conversations = db_manager.get_older_conversations_header(current_user)
 
     return jsonify(older_conversations), 200
+
+@app.route('/get/old/conversation')
+@jwt_required()
+def get_old_conversation():
+    current_user = get_jwt_identity()
+    position_of_conversation = request.args.get('positionOfConvoToFetch')
+    
+    print('Received positionOfConvoToFetch:', position_of_conversation)
+
+    # Get older conversations from the database
+    old_conversation = db_manager.get_old_conversation(current_user, position_of_conversation)
+
+    print('Older conversation:', old_conversation)
+
+    return jsonify(old_conversation), 200
 
 @app.route('/get/data/bible/kjv')
 def get_bible_data():

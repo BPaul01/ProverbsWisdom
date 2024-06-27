@@ -19,6 +19,12 @@ document.getElementById("old-convo-btn").addEventListener("click", function() {
             aConvo = document.createElement('a');
             aConvo.classList.add('a-menu-btn');
             aConvo.innerText = conversation[0];
+            aConvo.addEventListener('click', function() {
+                // Save the info in sessionStorage to display it on the old_conversation page
+                sessionStorage.setItem('position_of_conversation_to_fetch', i);
+
+                window.location.href = '/old_conversation';
+            });
             oldConvoDiv.appendChild(aConvo);
         }
     })

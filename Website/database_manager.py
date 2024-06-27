@@ -47,7 +47,6 @@ class DatabaseManager:
                 SELECT id FROM app_user WHERE username = %s;
             """, (username,))
             user_id = cursor.fetchone()[0]
-            print(f"User id: {user_id}")
             
             # Create a new conversation
             cursor.execute(f"""
@@ -55,7 +54,6 @@ class DatabaseManager:
                 RETURNING id;
             """, (user_id,))
             conversation_id = cursor.fetchone()[0]
-            print(f"Conversation id: {conversation_id}")
             
             for message in data['messages']:
                 print(f"Message: {message}")
@@ -68,9 +66,12 @@ class DatabaseManager:
             # Commit the changes
             success = self.commit_changes()
             
+            cursor.close()
+            
             return success
         except Exception as e:
             print("Error saving conversation:", e)
+            cursor.close()
             return False
     
     def get_older_conversations_header(self, username):
@@ -87,5 +88,40 @@ class DatabaseManager:
         """, (username,))
         
         rows = cursor.fetchall()
+        
+        cursor.close()
+        
+        return rows
+    
+    def get_old_conversation(self, username, position_of_conversation):
+        position_of_conversation = int(position_of_conversation)
+        
+        cursor = self.get_connection().cursor()
+        
+        # Find the id of the conversation
+        cursor.execute("""
+            SELECT c.id
+            FROM conversation c
+            JOIN app_user u ON c.userId = u.id
+            JOIN messages m ON c.id = m.conversationId
+            WHERE u.username = %s
+            AND m.position = 0
+            ORDER BY c.id
+        """, (username,))
+        rows = cursor.fetchall()
+        c_id = rows[position_of_conversation][0]
+        print("Conversation id:", c_id)
+        
+        # Get all the messages of the older conversation
+        cursor.execute("""
+            SELECT m.text, m.role, m.position
+            FROM messages m
+            JOIN conversation c ON m.conversationId = c.id
+            WHERE c.id = %s
+            ORDER BY m.position;
+        """, (c_id,))
+        rows = cursor.fetchall()
+        
+        cursor.close()
         
         return rows
