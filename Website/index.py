@@ -94,9 +94,10 @@ def ask_question():
     print("Last verse:", last_verse)
 
     # Make a request to the OpenAI API
+    answer = back_logic.get_first_answer(question, include_reference, chapter, first_verse, last_verse)
     
     result = {
-        'answer': 'This is the answer the the question'
+        'answer': answer
     }
     return jsonify(result), 200
 
@@ -131,9 +132,10 @@ def ask_followup_question():
     print("Processed messages:", messages)
     
     # Make a request to the OpenAI API
+    answer = back_logic.get_answer(messages)
     
     result = {
-        'answer': 'This is the answer the the question'
+        'answer': answer
     }
     return jsonify(result), 200
 
