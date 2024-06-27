@@ -84,3 +84,8 @@ document.getElementById("old-convo-btn").addEventListener("click", function() {
 document.getElementById('old-convo-close-btn').addEventListener('click', function() {
     oldConvoDiv.style.width = '0';
 });
+
+document.getElementById('logout-btn').addEventListener('click', function() {
+    localStorage.removeItem('token');
+    window.location.href = '/';
+})

@@ -126,3 +126,8 @@ window.onload = function() {
         }
     })
 }
+
+document.getElementById('logout-btn').addEventListener('click', function() {
+    localStorage.removeItem('token');
+    window.location.href = '/';
+})

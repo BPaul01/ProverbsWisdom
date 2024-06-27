@@ -36,6 +36,47 @@ class DatabaseManager:
         except Exception as e:
             print("Error closing connection:", e)
     
+    def check_credentials(self, username, password):
+        cursor = self.get_connection().cursor()
+        
+        cursor.execute("""
+            SELECT id FROM app_user WHERE username = %s AND password_hash = %s;
+        """, (username, password))
+        
+        user_id = cursor.fetchone()
+        
+        cursor.close()
+        
+        if user_id:
+            return True
+        else:
+            return False
+    
+    def create_user(self, username, password):
+        try:
+            cursor = self.get_connection().cursor()
+            
+            cursor.execute("""
+                SELECT username FROM app_user WHERE username = %s;
+            """, (username,))
+            
+            if cursor.fetchone():
+                cursor.close()
+                return False
+            
+            cursor.execute("""
+                INSERT INTO app_user (username, password_hash) VALUES (%s, %s);
+            """, (username, password))
+            
+            success = self.commit_changes()
+            
+            cursor.close()
+            
+            return success
+        except Exception as e:
+            print("Error creating user:", e)
+            cursor.close()
+    
     def save_conversation(self, username, data):
         print(f"Data to save:\n{data}")
         
@@ -43,13 +84,13 @@ class DatabaseManager:
             cursor = self.get_connection().cursor()
             
             # Find the id of the user
-            cursor.execute(f"""
+            cursor.execute("""
                 SELECT id FROM app_user WHERE username = %s;
             """, (username,))
             user_id = cursor.fetchone()[0]
             
             # Create a new conversation
-            cursor.execute(f"""
+            cursor.execute("""
                 INSERT INTO conversation (userId) VALUES (%s)
                 RETURNING id;
             """, (user_id,))
@@ -58,7 +99,7 @@ class DatabaseManager:
             for message in data['messages']:
                 print(f"Message: {message}")
                 # Save the messages
-                cursor.execute(f"""
+                cursor.execute("""
                     INSERT INTO messages (conversationId, position, text, role)
                     VALUES (%s, %s, %s, %s);
                 """, (conversation_id, message['position'], message['text'], message['role']))
@@ -77,7 +118,7 @@ class DatabaseManager:
     def get_older_conversations_header(self, username):
         cursor = self.get_connection().cursor()
         
-        cursor.execute(f"""
+        cursor.execute("""
             SELECT m.text
                 FROM messages m
                 JOIN conversation c ON m.conversationId = c.id

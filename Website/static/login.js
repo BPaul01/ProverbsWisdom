@@ -19,6 +19,7 @@ document.getElementById("submit-btn").addEventListener("click", function() {
         }
         else{
             console.log("Authentication failed");
+            document.getElementById('message').textContent = 'Invalid username or password. Please try again.';
         }
     })
     .catch(error => {

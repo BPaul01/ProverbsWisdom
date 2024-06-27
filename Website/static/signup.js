@@ -25,6 +25,7 @@ document.getElementById("submit-btn").addEventListener("click", function() {
         }
         else{
             console.log("Authentication failed");
+            document.getElementById('message').textContent = 'Invalid credentials. Please try again.';
         }
     })
     .catch(error => {

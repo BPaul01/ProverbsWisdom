@@ -32,25 +32,36 @@ def request_login():
     username = data.get('username')
     password = data.get('password')
     
-    if username == 'admin' and password == 'admin':
+    result = db_manager.check_credentials(username, password)
+    
+    if result:
         access_token = create_access_token(
             identity=username,
             expires_delta=timedelta(days=7)
         )
-        return jsonify({'access_token':access_token})
-
+        return jsonify({'access_token':access_token}), 200
+    
     else:
-        return jsonify({'error': 'Invalid credentials'})
+        return jsonify({'error': 'Invalid credentials'}), 401
 
 @app.route('/request-signup', methods=['POST'])
 def request_signup():
     data = request.get_json()
     
     username = data.get('username')
-    # password = data.get('password')
+    password = data.get('password')
     
-    access_token = create_access_token(identity=username)
-    return jsonify({'access_token':access_token})
+    result = db_manager.create_user(username, password)
+    
+    if result:
+        access_token = create_access_token(
+            identity=username,
+            expires_delta=timedelta(days=7)
+        )
+        return jsonify({'access_token':access_token}), 200
+    
+    else:
+        return jsonify({'error': 'Invalid credentials'}), 401
 
 @app.route('/start-chatting')
 def start_chatting():
