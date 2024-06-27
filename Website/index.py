@@ -1,11 +1,13 @@
 from flask import Flask, request, redirect, render_template, session, jsonify
-from flask_jwt_extended import JWTManager, create_access_token
-import json
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt, get_jwt_identity
+from datetime import timedelta
 import back_logic
+import database_manager
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = '799dd6ee-d842-4821-bc23-6c122f73c215'
 jwt = JWTManager(app)
+db_manager = database_manager.DatabaseManager()
 
 @app.route('/')
 def index():
@@ -27,8 +29,12 @@ def request_login():
     password = data.get('password')
     
     if username == 'admin' and password == 'admin':
-        access_token = create_access_token(identity=username)
+        access_token = create_access_token(
+            identity=username,
+            expires_delta=timedelta(days=7)
+        )
         return jsonify({'access_token':access_token})
+
     else:
         return jsonify({'error': 'Invalid credentials'})
 
@@ -115,6 +121,33 @@ def ask_followup_question():
         'answer': 'This is the answer the the question'
     }
     return jsonify(result), 200
+
+@app.route('/save/conversation', methods=['POST'])
+@jwt_required()
+def save_conversation():
+    current_user = get_jwt_identity()
+    print("Saving latest conversation of the user:", current_user)
+
+    # Save the conversation to the database
+    data = request.get_json()
+    
+    response = db_manager.save_conversation(current_user, data)
+    
+    if response:
+        return jsonify({'success': 'Conversation saved successfully'}), 201
+    else:
+        return jsonify({'error': 'Failed to save conversation'}), 500
+
+@app.route('/get/older/conversations')
+@jwt_required()
+def get_older_conversations():
+    current_user = get_jwt_identity()
+    print(current_user)
+
+    # Get older conversations from the database
+    older_conversations = db_manager.get_older_conversations_header(current_user)
+
+    return jsonify(older_conversations), 200
 
 @app.route('/get/data/bible/kjv')
 def get_bible_data():

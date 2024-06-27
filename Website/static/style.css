@@ -70,7 +70,7 @@ body {
 }
 
 /* Side menu styles */
-.side-menu {
+.side-menu, .old-convo-div{
     height: 100%;
     width: 0;
     position: fixed;
@@ -101,7 +101,7 @@ body {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-#close-btn {
+#close-btn, #old-convo-close-btn {
     font-size: larger;
     color: #FBF5F3;
     padding: 10px 10px 10px 10px;
@@ -117,7 +117,7 @@ body {
     margin-top: 10px;
 }
 
-.side-menu{
+.side-menu, .old-convo-div{
     position: absolute;
     top: 0;
     right: 0;

@@ -250,7 +250,11 @@ function updateTopButtonsAsNecessary(){
     }
     else{
         initializeSideMenu();
+        initializeOldConversationsSection();
     }
+}
+
+function initializeOldConversationsSection(){
 }
 
 function initializeSideMenu(){
