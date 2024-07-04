@@ -67,6 +67,10 @@ def request_signup():
 def start_chatting():
     return render_template('chat.html')
 
+@app.route('/book.html')
+def book():
+    return render_template('book.html')
+
 @app.route('/ask-question', methods=['POST'])
 def ask_question():
     data = request.get_json()
@@ -94,10 +98,10 @@ def ask_question():
     print("Last verse:", last_verse)
 
     # Make a request to the OpenAI API
-    answer = back_logic.get_first_answer(question, include_reference, chapter, first_verse, last_verse)
+    # answer = back_logic.get_first_answer(question, include_reference, chapter, first_verse, last_verse)
     
     result = {
-        'answer': answer
+        'answer': "Now here comes the answer",
     }
     return jsonify(result), 200
 

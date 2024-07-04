@@ -53,6 +53,29 @@ body {
     color: #BBF9E5;
 }
 
+.read-book{
+    background-color: #074475;
+    color: #BBF9E5;
+    border: none;
+}
+
+.read-book:hover{
+    background-color: #053155;
+    border-color: #053155;
+}
+
+.clicked{
+    background-color: #BBF9E5;
+    border-color: #BBF9E5;
+    color: #074475;
+}
+
+.clicked:hover{
+    background-color: #074475;
+    border-color: #BBF9E5;
+    color: #BBF9E5;
+}
+
 .open-menu-btn {
     display: flex;
     align-items: center;
@@ -74,7 +97,7 @@ body {
     height: 100%;
     width: 0;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     top: 0;
     right: 0;
     background-color: rgba(5, 49, 85, 0.5);
@@ -123,6 +146,27 @@ body {
     right: 0;
     font-size: larger;
     margin-left: 50px;
+}
+
+.book-reading-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: fixed;
+    z-index: 1;
+
+    width: 0vw;
+    height: 0vh;
+
+    transition: 0.5s;
+}
+
+.book-reading{
+    width: 80%;
+    height: 80%;
+
+    border-radius: 15px;
 }
 
 .main-content {
