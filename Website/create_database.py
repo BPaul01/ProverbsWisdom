@@ -36,6 +36,7 @@ try:
         CREATE TABLE conversation (
             id SERIAL PRIMARY KEY,
             userId INTEGER NOT NULL,
+            summary VARCHAR(512),
             FOREIGN KEY (userId) REFERENCES app_user(id)
         );""")
     

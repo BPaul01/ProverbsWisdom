@@ -152,7 +152,13 @@ def save_conversation():
     # Save the conversation to the database
     data = request.get_json()
     
-    response = db_manager.save_conversation(current_user, data)
+    print('Received data:', data)
+    
+    # Generate a summary for the conversation
+    summary = back_logic.generate_summary(data['messages'])
+    print('Summary:', summary)
+    
+    response = db_manager.save_conversation(current_user, data, summary)
     
     if response:
         return jsonify({'success': 'Conversation saved successfully'}), 201

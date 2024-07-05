@@ -77,9 +77,9 @@ class DatabaseManager:
             print("Error creating user:", e)
             cursor.close()
     
-    def save_conversation(self, username, data):
-        print(f"Data to save:\n{data}")
-        
+    def save_conversation(self, username, data, summary):
+        if len(summary) > 512:
+            summary = summary[:512]
         try:
             cursor = self.get_connection().cursor()
             
@@ -91,9 +91,9 @@ class DatabaseManager:
             
             # Create a new conversation
             cursor.execute("""
-                INSERT INTO conversation (userId) VALUES (%s)
+                INSERT INTO conversation (userId, summary) VALUES (%s, %s)
                 RETURNING id;
-            """, (user_id,))
+            """, (user_id, summary))
             conversation_id = cursor.fetchone()[0]
             
             for message in data['messages']:
@@ -119,14 +119,21 @@ class DatabaseManager:
         cursor = self.get_connection().cursor()
         
         cursor.execute("""
-            SELECT m.text
-                FROM messages m
-                JOIN conversation c ON m.conversationId = c.id
-                JOIN app_user u ON c.userId = u.id
-                WHERE u.username = %s
-                AND m.position = 0
-                ORDER BY c.id;
+            SELECT c.summary FROM conversation c
+            JOIN app_user u ON c.userId = u.id
+            WHERE u.username = %s
+            ORDER BY c.id;
         """, (username,))
+        
+        # cursor.execute("""
+        #     SELECT m.text
+        #         FROM messages m
+        #         JOIN conversation c ON m.conversationId = c.id
+        #         JOIN app_user u ON c.userId = u.id
+        #         WHERE u.username = %s
+        #         AND m.position = 0
+        #         ORDER BY c.id;
+        # """, (username,))
         
         rows = cursor.fetchall()
         

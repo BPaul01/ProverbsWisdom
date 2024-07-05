@@ -53,3 +53,22 @@ def get_answer(messages):
     answer = completion.choices[0].message.content
     
     return answer
+
+def generate_summary(messages):
+    convo = ""
+    for m in messages:
+        convo += m['role'] + ': ' + m['text'] + '\n'
+    
+    gpt_messages=[
+        {"role": "system", "content": "You are a helpful assistant that summarizes conversations."},
+        {"role": "user", "content": "Summarize in less that 15 words the following conversation:\n" + convo},
+    ]
+    
+    client = OpenAI()
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=gpt_messages
+    )
+    summary = completion.choices[0].message.content
+    
+    return summary
