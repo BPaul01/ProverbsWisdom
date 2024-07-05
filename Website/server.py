@@ -165,6 +165,23 @@ def save_conversation():
     else:
         return jsonify({'error': 'Failed to save conversation'}), 500
 
+@app.route('/save/old/conversation', methods=['POST'])
+@jwt_required()
+def save_old_conversation():
+    current_user = get_jwt_identity()
+    print("Saving latest conversation of the user:", current_user)
+
+    # Save the conversation to the database
+    data = request.get_json()
+    print('Received data:', data)
+
+    response = db_manager.save_old_conversation(current_user, data)
+
+    if response:
+        return jsonify({'success': 'Conversation saved successfully'}), 201
+    else:
+        return jsonify({'error': 'Failed to save conversation'}), 500
+
 @app.route('/get/older/conversations')
 @jwt_required()
 def get_older_conversations():

@@ -115,6 +115,73 @@ class DatabaseManager:
             cursor.close()
             return False
     
+    def save_old_conversation(self, username, data):
+        try:
+            cursor = self.get_connection().cursor()
+            
+            # Find the id of the user
+            cursor.execute("""
+                SELECT id FROM app_user WHERE username = %s;
+            """, (username,))
+            user_id = cursor.fetchone()[0]
+            
+            # Find the conversation id
+            cursor.execute("""
+                SELECT c.id
+                    FROM conversation c
+                    JOIN app_user u ON c.userId = u.id
+                    JOIN messages m ON c.id = m.conversationId
+                    WHERE u.username = %s
+                    AND m.position = 0
+                    ORDER BY c.id
+            """, (username,))
+            rows = cursor.fetchall()
+            c_id = rows[int(data['positionOfConvoToFetch'])][0]
+            print("Conversation id:", c_id)
+            
+            # Find the summary of the conversation
+            cursor.execute("""
+                SELECT summary FROM conversation WHERE id = %s;
+            """, (c_id,))
+            summary = cursor.fetchone()[0]
+            print("Summary:", summary)
+            
+            # Delete all the messages of the conversation
+            cursor.execute("""
+                DELETE FROM messages
+                WHERE conversationId = %s;
+            """, (c_id,))
+            
+            # Delete the conversation
+            cursor.execute("""
+                DELETE FROM conversation
+                WHERE id = %s;
+            """, (c_id,))
+            
+            # Save the new conversation
+            cursor.execute("""
+                INSERT INTO conversation (userId, summary) VALUES (%s, %s)
+                RETURNING id;
+            """, (user_id, summary))
+            conversation_id = cursor.fetchone()[0]
+            
+            # Save the messages
+            for message in data['messages']:
+                print(f"Message: {message}")
+                cursor.execute("""
+                    INSERT INTO messages (conversationId, position, text, role)
+                    VALUES (%s, %s, %s, %s);
+                """, (conversation_id, message['position'], message['text'], message['role']))
+            
+            # Commit the changes
+            success = self.commit_changes()
+            
+            cursor.close()
+            
+            return success
+        except Exception as e:
+            print("Error saving conversation:", e)
+    
     def get_older_conversations_header(self, username):
         cursor = self.get_connection().cursor()
         

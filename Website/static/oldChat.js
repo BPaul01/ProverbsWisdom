@@ -4,6 +4,39 @@ const oldConvoDiv = document.getElementById('old-convo-div');
 let chatContainer = document.getElementById('chat-container');
 
 document.getElementById('new-convo-btn').addEventListener('click', function() {
+    if(sessionStorage.getItem('modified') === 'true') {
+        //Save the current conversation
+        let chatContainerKids = chatContainer.children;
+        let messages = [];
+
+        for (let i = 0; i < chatContainerKids.length; i++) {
+            messageContainer = chatContainerKids[i];
+            text = messageContainer.children[0].innerHTML;
+            role = messageContainer.classList.contains('user-container') ? 'user' : 'assistant';
+
+            message = {
+                'position': i,
+                'role': role,
+                'text': text
+            }
+
+            messages.push(message);
+        }
+
+        fetch('/save/old/conversation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            body: JSON.stringify({messages: messages, positionOfConvoToFetch: sessionStorage.getItem('position_of_conversation_to_fetch')}),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+    }
+
     //Redirect to the chat page
     window.location.href = "/";
 });
@@ -63,6 +96,117 @@ document.getElementById('old-convo-close-btn').addEventListener('click', functio
     oldConvoDiv.style.width = '0';
 });
 
+document.getElementById("input-textarea").addEventListener('keydown', function(event) {
+    if(event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        askFollowUp(this.value);
+    }
+});
+
+function askFollowUp(text) {
+    if (text !== ""){
+        sessionStorage.setItem('modified', 'true');
+
+        //Put the text in the user-text div 
+        createUserChat(text);
+
+        //Clear the input
+        document.getElementById("input-textarea").value = "";
+
+        // Get all the past chats 
+        let chatArray = buildChatArray();
+
+        let bodyData;
+        if(sessionStorage.getItem('reference') === 'true') {
+            chapter = sessionStorage.getItem('chapter');
+            firstVerse = sessionStorage.getItem('first-verse');
+            lastVerse = sessionStorage.getItem('last-verse');
+            bodyData = {
+                chats: chatArray,
+                includeReference: 'true',
+                chapter: chapter,
+                firstVerse: firstVerse,
+                lastVerse: lastVerse
+            }
+        }
+        else {
+            bodyData = {
+                chats: chatArray,
+                includeReference: 'false'
+            }
+        }
+
+        //Send the text to the server
+        fetch('/ask-follow-up-question', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bodyData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            //Display the response
+            createBotChat(data.answer)
+            scrollToBottom();
+        });
+    }
+}
+
+function createUserChat(text) {
+    newUserContainer = document.createElement("div");
+    newUserContainer.classList.add("user-container");
+    newUserContainer.classList.add("container");
+
+    newUserChat = document.createElement("div");
+    newUserChat.classList.add("chat");
+    newUserChat.classList.add("user-text");
+    newUserChat.innerHTML = text;
+
+    document.getElementById("chat-container").appendChild(newUserContainer);
+    newUserContainer.appendChild(newUserChat);
+}
+
+function createBotChat(text) {
+    newBotContainer = document.createElement("div");
+    newBotContainer.classList.add("bot-container");
+    newBotContainer.classList.add("container");
+
+    newBotChat = document.createElement("div");
+    newBotChat.classList.add("chat");
+    newBotChat.classList.add("bot-text");
+    newBotChat.innerHTML = text;
+
+    document.getElementById("chat-container").appendChild(newBotContainer);
+    newBotContainer.appendChild(newBotChat);
+}
+
+function buildChatArray(){
+    const containers = document.querySelectorAll('.container');
+    const chatArray = [];
+
+    containers.forEach(container => {
+        const chatDiv = container.querySelector('.chat');
+        const role = container.classList.contains('user-container') ? 'user' : 'bot';
+        const text = chatDiv.innerHTML;
+
+        element = {
+            'role': role,
+            'text': text
+        }
+        chatArray.push(element);
+    });
+
+    return chatArray;
+}
+
+function scrollToBottom() {
+    window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth'
+    });
+}
+
 function initializeSideMenu(){
     menuBtn = document.createElement('a');
     menuBtn.setAttribute('id', 'menu-btn');
@@ -95,6 +239,8 @@ function initializeSideMenu(){
 window.onload = function() {
     initializeSideMenu();
 
+    sessionStorage.setItem('modified', 'false');
+    
     token = localStorage.getItem('token');
     idOfConvoToFetch = sessionStorage.getItem('position_of_conversation_to_fetch');
 
