@@ -98,10 +98,10 @@ def ask_question():
     print("Last verse:", last_verse)
 
     # Make a request to the OpenAI API
-    # answer = back_logic.get_first_answer(question, include_reference, chapter, first_verse, last_verse)
+    answer = back_logic.get_first_answer(question, include_reference, chapter, first_verse, last_verse)
     
     result = {
-        'answer': "Now here comes the answer",
+        'answer': answer,
     }
     return jsonify(result), 200
 

@@ -16,7 +16,7 @@ with open('openAI\\ReRefinedTrainingData.jsonl', 'r') as file, open('openAI\\Fin
             "messages" : [
                 {
                     "role": "system",
-                    "content" : "You are a helpful assistant giving biblically accurate answers."
+                    "content" : "You are a helpful assistant giving biblically accurate answers relying as much as possible on the book of Proverbs."
                 },
                 {
                     "role": "user",

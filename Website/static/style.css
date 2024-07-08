@@ -155,6 +155,7 @@ body {
 
     position: fixed;
     z-index: 1;
+    margin-top: 40px;
 
     width: 0vw;
     height: 0vh;
@@ -163,8 +164,8 @@ body {
 }
 
 .book-reading{
-    width: 80%;
-    height: 80%;
+    width: 90%;
+    height: 100%;
 
     border-radius: 15px;
 }

@@ -34,7 +34,7 @@ def get_first_answer(question, include_reference, chapter, first_verse, last_ver
     
     client = OpenAI()
     completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="ft:gpt-3.5-turbo-0125:personal:proverbswisdomv1:9hwdPm8p",
         messages=[
             {"role": "system", "content": "You are a helpful assistant giving biblically accurate answers relying as much as possible to the book of Proverbs."},
             {"role": "user", "content": question}
@@ -47,7 +47,7 @@ def get_first_answer(question, include_reference, chapter, first_verse, last_ver
 def get_answer(messages):
     client = OpenAI()
     completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="ft:gpt-3.5-turbo-0125:personal:proverbswisdomv1:9hwdPm8p",
         messages=messages
     )
     answer = completion.choices[0].message.content

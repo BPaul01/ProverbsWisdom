@@ -12,16 +12,16 @@ body{
 
 h1{
     font-family: cursive;
-    font-size: xx-large;
+    font-size: xxx-large;
     color: #FBF5F3;
 }
 
 select{
     background-color: #6498BD;
     border: 5px solid #074475;
-    border-radius: 20px;
+    border-radius: 25px;
     font-family: Arial, sans-serif;
-    font-size: x-large;
+    font-size: xx-large;
     color: #FBF5F3;
     cursor: pointer;
 }
